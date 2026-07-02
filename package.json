@@ -1,0 +1,18 @@
+{
+  "name": "cooley-people-search-automation",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript automation demo for cooley",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.3",
+    "allure-playwright": "^3.10.0",
+    "dotenv": "^17.4.2"
+  }
+}

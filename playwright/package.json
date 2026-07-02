@@ -1,0 +1,34 @@
+{
+    "name": "cooley-people-search-automation",
+    "private": true,
+    "scripts": {
+        "test": "playwright test",
+        "report:html": "playwright show-report",
+        "merge-reports": "npx jrm ./results/combined.xml \"./results/*.xml\" || echo 'No XML files to merge'",
+        "delete-results": "rm -rf ./results/* && rm -rf ./results/allure-results/*",
+        "test:run": "npm run delete-results && npm run test && npm run merge-reports",
+        "test:smoke": "npm run delete-results && npx playwright test --grep='@smoke' && npm run merge-reports",
+        "test:regression": "npm run delete-results && playwright test --grep @regression && npm run merge-reports",
+        "test:tag": "npx playwright test --grep",
+        "format": "prettier --write \"tests/**/*.{js,jsx,ts,tsx,json,md}\"",
+        "test:report": "npx playwright show-report ./results/html",
+        "test:ui": "npm run delete-results && playwright test --ui",
+        "test:uiport": "npx playwright test --ui --config=playwright.config.ts --ui-port=3333",
+        "test:headed": "playwright test --project=chromium --headed",
+        "test:ci": "playwright test --reporter=html",
+        "report": "playwright show-report",
+        "lint": "eslint './**/*.{ts,tsx,js,jsx}' --fix"
+    },
+    "devDependencies": {
+        "@playwright/test": "1.57.0",
+        "@types/node": "^20.0.0",
+        "allure-playwright": "^3.4.5",
+        "dotenv": "^16.4.5",
+        "eslint": "^8.50.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-import": "^2.30.0",
+        "junit-report-merger": "^9.0.3",
+        "prettier": "^3.0.0",
+        "typescript": "^5.2.2"
+    }
+}
