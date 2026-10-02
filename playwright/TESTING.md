@@ -30,6 +30,8 @@ It focuses **only on testing**. This is a standalone Playwright automation proje
 
 This suite tests a live external site rather than a local application, so there is no dev server to start and no backend/API layer to mock.
 
+There is also a second, separate suite for the **nextgen Vanilla dashboard** (`dev.nextgen.vanillavc.com/cooley/dashboard`), which sits behind Azure B2C login. See [Vanilla Dashboard Auth Suite](#vanilla-dashboard-auth-suite) below.
+
 ---
 
 ## Prerequisites
@@ -38,6 +40,7 @@ This suite tests a live external site rather than a local application, so there 
 * **npm**
 * Project dependencies installed: `npm install`
 * No environment variables required beyond optional overrides in `.env` (see [Common Issues](#common-issues))
+* To run the Vanilla dashboard suite, `VANILLA_EMAIL` / `VANILLA_PASSWORD` must be set in `playwright/.env` (copy `playwright/.env.example`) — real credentials, never committed
 
 ---
 
@@ -150,6 +153,33 @@ Practice area values (`@practices` facet, e.g. "Emerging Companies") and industr
 * Keep tests declarative — filtering/assertion logic lives in the page object, not the spec
 * Assert on outcomes (`toBeChecked`, `toBeHidden`, result counts), not just that an action resolved without throwing
 * Cookie/consent banner dismissal (`closeBannerIfVisible`) runs before every test via `beforeEach`
+
+---
+
+## Vanilla Dashboard Auth Suite
+
+`dev.nextgen.vanillavc.com/cooley/dashboard` is a separate, authenticated app (not the public cooley.com/people site above), gated by an Azure B2C hosted login (`vanillavcdev.b2clogin.com`). It's wired up as its own set of Playwright projects so it doesn't affect the existing `chromium` project:
+
+| Project             | Purpose                                                              |
+| -------------------- | --------------------------------------------------------------------- |
+| `vanilla-setup`      | Logs in once via `tests/vanilla/auth.setup.ts`, saves session to `playwright/.auth/user.json` |
+| `vanilla-dashboard`  | Runs `tests/vanilla/*.spec.ts` reusing the saved session (depends on `vanilla-setup`) |
+
+### Running it
+
+```bash
+npm run test:vanilla          # runs vanilla-setup, then vanilla-dashboard
+```
+
+Requires `VANILLA_EMAIL` and `VANILLA_PASSWORD` in `playwright/.env` (see `playwright/.env.example`). `playwright/.auth/` is gitignored — it holds live session cookies and must never be committed.
+
+### Current coverage
+
+* Login succeeds and lands on `/cooley/dashboard` (the setup step itself)
+* Saved session is reused without re-prompting for login
+* Session survives a page reload
+
+`user can sign out and is returned to the login page` is marked `test.fixme` in `dashboard-auth.spec.ts` — the sign-out control hasn't been inspected on the live dashboard yet. Once you've seen the real markup, fill in the locator and remove `.fixme`. The same applies to `DashboardPage` in general: its current assertions (URL + absence of the login heading) are deliberately conservative placeholders, not confirmed against real authenticated markup — tighten them once you can see the dashboard's actual DOM, following this repo's existing convention of verifying locators against the live page before trusting them.
 
 ---
 

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npx playwright *)",
+      "Bash(find ~/Desktop ~/Documents ~ -maxdepth 4 -iname \"*vanilla*automation*\" -not -path \"*/node_modules/*\" 2>/dev/null)"
+    ]
+  }
+}

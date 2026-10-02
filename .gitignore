@@ -148,3 +148,6 @@ playwright-report/
 allure-results/
 allure-report/
 playwright/results/
+
+# Playwright storageState — contains authenticated session cookies
+playwright/.auth/
