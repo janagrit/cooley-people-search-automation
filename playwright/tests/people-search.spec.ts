@@ -4,7 +4,6 @@ import { test, expect } from '../fixture';
 test.describe('Cooley people search', { tag: ['@smoke', '@people'] }, () => {
   
   test.beforeEach(async ({  peopleSearchPage }) => {
-    // const peopleSearchPage = new PeopleSearchPage(page);
     await peopleSearchPage.gotoPeople();
     console.log("Pass goto")
   });
